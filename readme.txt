@@ -1,9 +1,9 @@
 Field: Reflection
 -------------------------------------------------------------------------------
 
-Version: 1.0.8
+Version: 1.0.9
 Author: Rowan Lewis <me@rowanlewis.com>
-Build Date: 9 December 2009
+Build Date: 15 December 2009
 Requirements: Symphony 2.0.6
 
 

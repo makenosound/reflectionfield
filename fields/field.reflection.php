@@ -32,6 +32,7 @@
 					`handle` VARCHAR(255) DEFAULT NULL,
 					`value` TEXT DEFAULT NULL,
 					`value_formatted` TEXT DEFAULT NULL,
+					`word_count` INT(11) UNSIGNED DEFAULT NULL,
 					PRIMARY KEY (`id`),
 					KEY `entry_id` (`entry_id`),
 					FULLTEXT KEY `value` (`value`),
@@ -207,9 +208,10 @@
 			$status = self::__OK__;
 			
 			return array(
-				'handle'			=> null,
-				'value'				=> null,
-				'value_formatted'	=> null
+				'handle'					=> null,
+				'value'						=> null,
+				'value_formatted'	=> null,
+				'word_count'			=> null
 			);
 		}
 		
@@ -222,6 +224,7 @@
 			
 			$element = new XMLElement($this->get('element_name'));
 			$element->setAttribute('handle', $data['handle']);
+			$element->setAttribute('word-count', $data['word_count']);
 			$element->setValue($data['value_formatted']);
 			
 			$wrapper->appendChild($element);
@@ -303,9 +306,10 @@
 			// Save:
 			$result = $this->Database->update(
 				array(
-					'handle'			=> Lang::createHandle($value),
-					'value'				=> $value,
-					'value_formatted'	=> $value_formatted
+					'handle'					=> Lang::createHandle($value),
+					'value'						=> $value,
+					'value_formatted'	=> $value_formatted,
+					'word_count'			=> General::countWords($value)
 				),
 				"tbl_entries_data_{$field_id}",
 				"`entry_id` = '{$entry_id}'"
@@ -461,13 +465,15 @@
 				
 				$value = $data['value_formatted'];
 				$handle = $data['handle'];
+				$wordcount = $data['word_count'];
 				$element = $this->get('element_name');
 				
 				if (!isset($groups[$element][$handle])) {
 					$groups[$element][$handle] = array(
 						'attr'		=> array(
-							'handle'	=> $handle,
-							'value'		=> $value
+							'handle'			=> $handle,
+							'value'				=> $value,
+							'word-count'	=> $wordcount
 						),
 						'records'	=> array(),
 						'groups'	=> array()
